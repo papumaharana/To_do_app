@@ -15,13 +15,17 @@ def login():
         # exits user:
         user = Register.query.filter_by(username = username).first()
 
-        if password == user.password:
-            session['user_id'] = user.id
-            session['user'] = user.username
-            flash('Login successful!', 'success')
-            return redirect(url_for('task.view_task'))
+        if user:
+            if password == user.password:
+                session['user_id'] = user.id
+                session['user'] = user.username
+                flash('Login successful!', 'success')
+                return redirect(url_for('task.view_task'))
+            else:
+                flash('Please enter correct username and password.', 'danger')
         else:
-            flash('Please enter correct username and password.', 'danger')
+            flash('User not available, Please sign up.', 'danger')
+            return redirect(url_for('auth.sign_up'))
     return render_template('login.html')
 
 @auth_bp.route('/logout')
