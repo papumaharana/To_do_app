@@ -1,0 +1,56 @@
+{% extends 'base.html'%}
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+
+<div class="task-box">
+    <h2>Welcome {{ name }}! your Tasks are:</h2>
+    <form action="{{ url_for('task.add_task') }}" method="POST" class="task-form">
+        <input type="text" name="title" placeholder="New task" required>
+        <button type="submit" class="btn">Add</button>
+    </form>
+
+    {% if task %}
+    <form action="{{ url_for('task.clear_all') }}">
+        <button type="submit" class="btn btn-clear">Clear All</button>
+    </form>
+
+    <br>
+
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Change</th>
+                <th>Clear task</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for i in task %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ i.title }}</td>
+                <td>
+                    <span class="badge {{ i.status|lower }}">{{ i.status }}</span>
+                </td>
+                <td>
+                    <form action="{{ url_for('task.update_status', task_id = i.id )}}">
+                        <button type="submit" class="btn-small">Next</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for('task.clear_task', task_id = i.id )}}">
+                        <button type="submit" class="btn-clear-task">Clear</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No task yet!</p>
+    {% endif %}
+</div>
+{% endblock %}
